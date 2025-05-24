@@ -1,0 +1,36 @@
+name: Build LZSS for Windows
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build all .exe with Makefile (Windows)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
+
+      - name: Build with Makefile
+        run: make
+
+      - name: List built files
+        run: dir
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lzss-windows-build
+          path: |
+            *.exe
+
